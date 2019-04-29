@@ -3,6 +3,7 @@ set encoding=utf-8
 set number
 set relativenumber
 set cursorline
+set background=light " for nvim
 syntax on
 
 " Space instead of TAB
