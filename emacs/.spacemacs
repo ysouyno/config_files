@@ -59,13 +59,13 @@ values."
             c-c++-default-mode-for-headers 'c++-mode
             c-c++-enable-clang-support t)
      semantic
-     ycmd
+     ;; ycmd
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(yasnippet-snippets)
+   dotspacemacs-additional-packages '(yasnippet-snippets irony)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -324,9 +324,18 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; markdown settings
   (setq markdown-command "pandoc")
-  (setq ycmd-server-command '("python" "/home/ysouyno/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd"))
-  (setq ycmd-force-semantic-completion t)
+
+  ;; ycmd settings
+  ;; (setq ycmd-server-command '("python" "/home/ysouyno/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd"))
+  ;; (setq ycmd-force-semantic-completion t)
+
+  ;; irony settings
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
