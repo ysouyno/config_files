@@ -26,7 +26,8 @@
 (defun ysouyno-c-mode-config ()
   (set (make-local-variable 'company-backends)
        '((company-c-headers company-clang
-                            company-dabbrev-code company-yasnippet)))
+                            company-dabbrev-code company-yasnippet
+                            company-rtags)))
   )
 
 (defun ysouyno-c-mode-common-defaults ()
@@ -45,3 +46,15 @@
 
 ;;; common
 (global-linum-mode t)
+
+;;; rtags
+(prelude-require-package 'rtags)
+(require 'rtags)
+(define-key c-mode-base-map (kbd "M-.")
+  (function rtags-find-symbol-at-point))
+(define-key c-mode-base-map (kbd "M-,")
+  (function rtags-find-references-at-point))
+
+;;; cmake-ide
+(prelude-require-package 'cmake-ide)
+(cmake-ide-setup)
