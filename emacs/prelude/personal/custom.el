@@ -5,7 +5,7 @@
   (define-key company-active-map (kbd "M-n") nil)
   (define-key company-active-map (kbd "M-p") nil)
   )
-(setq company-idle-delay 0.1)
+(setq company-idle-delay 0.3)
 
 ;;; company-c-headers
 (prelude-require-package 'company-c-headers)
@@ -58,3 +58,24 @@
 ;;; cmake-ide
 (prelude-require-package 'cmake-ide)
 (cmake-ide-setup)
+
+;;; markdown, markdown-toc
+(prelude-require-package 'markdown-toc)
+(setq markdown-command "pandoc")
+(prefer-coding-system 'utf-8)
+(add-hook 'markdown-mode-hook 'turn-on-orgtbl)
+
+;;; windows-nt: FIND: Parameter format not correct
+(when (eq system-type 'windows-nt)
+  ;; Make sure Unix tools are in front of `exec-path'
+  (let ((bash (executable-find "bash")))
+    (when bash
+      (push (file-name-directory bash) exec-path)))
+  ;; Update PATH from exec-path)
+  (let ((path (mapcar 'file-truename
+                      (append exec-path
+                              (split-string
+                               (getenv "PATH") path-separator t)))))
+    (setenv "PATH" (mapconcat 'identity
+                              (delete-dups path) path-separator)))
+  )
