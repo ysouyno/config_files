@@ -65,6 +65,10 @@
 (prefer-coding-system 'utf-8)
 (add-hook 'markdown-mode-hook 'turn-on-orgtbl)
 
+(defun ysouyno-markdown-mode-hook ()
+  (company-mode -1))
+(add-hook 'markdown-mode-hook 'ysouyno-markdown-mode-hook)
+
 ;;; windows-nt: FIND: Parameter format not correct
 (when (eq system-type 'windows-nt)
   ;; Make sure Unix tools are in front of `exec-path'
