@@ -27,7 +27,8 @@
   (set (make-local-variable 'company-backends)
        '((company-c-headers company-clang
                             company-dabbrev-code company-yasnippet
-                            company-rtags)))
+                            ;; company-rtags
+                            )))
   )
 
 (defun ysouyno-c-mode-common-defaults ()
@@ -48,16 +49,23 @@
 (global-linum-mode t)
 
 ;;; rtags
-(prelude-require-package 'rtags)
-(require 'rtags)
-(define-key c-mode-base-map (kbd "M-.")
-  (function rtags-find-symbol-at-point))
-(define-key c-mode-base-map (kbd "M-,")
-  (function rtags-find-references-at-point))
+;; (prelude-require-package 'rtags)
+;; (require 'rtags)
+;; (define-key c-mode-base-map (kbd "M-.")
+;;   (function rtags-find-symbol-at-point))
+;; (define-key c-mode-base-map (kbd "M-,")
+;;   (function rtags-find-references-at-point))
 
 ;;; cmake-ide
-(prelude-require-package 'cmake-ide)
-(cmake-ide-setup)
+;; (prelude-require-package 'cmake-ide)
+;; (cmake-ide-setup)
+
+;;; clangd
+(prelude-require-package 'eglot)
+(require 'eglot)
+(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+(add-hook 'c-mode-hook 'eglot-ensure)
+(add-hook 'c++-mode-hook 'eglot-ensure)
 
 ;;; markdown, markdown-toc
 (prelude-require-package 'markdown-toc)
