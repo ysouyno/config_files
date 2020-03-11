@@ -27,7 +27,8 @@
   (set (make-local-variable 'company-backends)
        '((company-c-headers company-clang
                             company-dabbrev-code company-yasnippet
-                            company-rtags)))
+                            ;; company-rtags
+                            )))
   )
 
 (defun ysouyno-c-mode-common-defaults ()
@@ -48,16 +49,25 @@
 (global-linum-mode t)
 
 ;;; rtags
-(prelude-require-package 'rtags)
-(require 'rtags)
-(define-key c-mode-base-map (kbd "M-.")
-  (function rtags-find-symbol-at-point))
-(define-key c-mode-base-map (kbd "M-,")
-  (function rtags-find-references-at-point))
+;; (prelude-require-package 'rtags)
+;; (require 'rtags)
+;; (define-key c-mode-base-map (kbd "M-.")
+;;   (function rtags-find-symbol-at-point))
+;; (define-key c-mode-base-map (kbd "M-,")
+;;   (function rtags-find-references-at-point))
 
 ;;; cmake-ide
-(prelude-require-package 'cmake-ide)
-(cmake-ide-setup)
+;; (prelude-require-package 'cmake-ide)
+;; (cmake-ide-setup)
+
+;;; ccls
+(prelude-require-packages '(use-package ccls lsp-mode lsp-ui company-lsp))
+(use-package lsp-mode :commands lsp)
+(use-package lsp-ui :commands lsp-ui-mode)
+(use-package company-lsp :commands company-lsp)
+(use-package ccls
+  :hook ((c-mode c++-mode) .
+         (lambda () (require 'ccls) (lsp))))
 
 ;;; markdown, markdown-toc
 (prelude-require-package 'markdown-toc)
