@@ -84,6 +84,11 @@
                               (delete-dups path) path-separator)))
   )
 
+;;; fci-mode
+(prelude-require-package 'fill-column-indicator)
+(require 'fill-column-indicator)
+(setq fci-rule-column 80)
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
