@@ -1,70 +1,56 @@
-;;; company
+;;; common
+(global-linum-mode t)
+
+;;; whitespace
+(require 'whitespace)
+(setq whitespace-style '(face tabs empty trailing))
+
+;;; fci-mode
+(prelude-require-package 'fill-column-indicator)
+(require 'fill-column-indicator)
+(setq fci-rule-column 80)
+
+;;; yasnippet
+(prelude-require-packages '(yasnippet yasnippet-snippets))
+
+;;; need enable prelude-company
+(require 'company)
 (with-eval-after-load 'company
   (define-key company-active-map (kbd "\C-n") #'company-select-next)
   (define-key company-active-map (kbd "\C-p") #'company-select-previous)
   (define-key company-active-map (kbd "M-n") nil)
   (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
   )
 (setq company-idle-delay 0.3)
 
-;;; company-c-headers
-(prelude-require-package 'company-c-headers)
-
-(require 'company-c-headers)
-
-(add-to-list 'company-backends 'company-c-headers)
-(add-to-list 'company-c-headers-path-system "/usr/lib/clang/9.0.1/include")
-(add-to-list 'company-c-headers-path-system "/usr/include")
-(add-to-list 'company-c-headers-path-system "/usr/local/include")
-(add-to-list 'company-c-headers-path-system "/usr/include/c++/9.2.0")
-(add-to-list 'company-c-headers-path-system ".")
-
-;;; yasnippet
-(prelude-require-packages '(yasnippet yasnippet-snippets))
-
-;;; prelude-c
-(defun ysouyno-c-mode-config ()
-  (set (make-local-variable 'company-backends)
-       '((company-c-headers company-clang
-                            company-dabbrev-code company-yasnippet
-                            company-rtags)))
+;;; need enable prelude-lsp
+(use-package lsp-mode
+  :ensure t
+  :commands (lsp lsp-deferred)
+  ;; clangd or ccls
+  :hook ((c-mode c++-mode) . lsp)
+  :hook ((c-mode c++-mode) . yas-minor-mode)
+  :hook ((c-mode c++-mode) . (lambda ()
+                               (setq c-default-style "k&r"
+                                     c-basic-offset 2)))
+  ;; gopls
+  :hook (go-mode . lsp-deferred)
+  :hook (go-mode . yas-minor-mode)
   )
-
-(defun ysouyno-c-mode-common-defaults ()
-  (setq c-default-style "k&r"
-        c-basic-offset 2)
-  (add-hook 'c++-mode-hook 'ysouyno-c-mode-config)
-  (add-hook 'c-mode-hook 'ysouyno-c-mode-config)
-  (yas-minor-mode 1)
-  )
-
-(add-hook 'prelude-c-mode-common-hook 'ysouyno-c-mode-common-defaults t)
 
 ;;; company-quickhelp
 (prelude-require-package 'company-quickhelp)
 (company-quickhelp-mode)
 
-;;; common
-(global-linum-mode t)
-
-;;; rtags
-(prelude-require-package 'rtags)
-(require 'rtags)
-(define-key c-mode-base-map (kbd "M-.")
-  (function rtags-find-symbol-at-point))
-(define-key c-mode-base-map (kbd "M-,")
-  (function rtags-find-references-at-point))
-
-;;; cmake-ide
-(prelude-require-package 'cmake-ide)
-(cmake-ide-setup)
-
 ;;; markdown, markdown-toc
 (prelude-require-package 'markdown-toc)
+(require 'markdown-mode)
 (setq markdown-command "pandoc")
 (prefer-coding-system 'utf-8)
 (add-hook 'markdown-mode-hook 'turn-on-orgtbl)
 
+;; disable company-mode in markdown-mode
 (defun ysouyno-markdown-mode-hook ()
   (company-mode -1))
 (add-hook 'markdown-mode-hook 'ysouyno-markdown-mode-hook)
@@ -83,15 +69,3 @@
     (setenv "PATH" (mapconcat 'identity
                               (delete-dups path) path-separator)))
   )
-
-;;; fci-mode
-(prelude-require-package 'fill-column-indicator)
-(require 'fill-column-indicator)
-(setq fci-rule-column 80)
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(whitespace-line ((t nil))))
