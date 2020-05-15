@@ -25,6 +25,8 @@
 (setq company-idle-delay 0.3)
 
 ;;; need enable prelude-lsp
+(prelude-require-package 'use-package)
+(require 'use-package)
 (use-package lsp-mode
   :ensure t
   :commands (lsp lsp-deferred)
