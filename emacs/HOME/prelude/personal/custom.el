@@ -1,6 +1,3 @@
-;;; common
-(global-linum-mode t)
-
 ;;; whitespace
 (require 'whitespace)
 (setq whitespace-style '(face tabs empty trailing))
@@ -46,7 +43,9 @@
 ;;; markdown, markdown-toc
 (prelude-require-package 'markdown-toc)
 (require 'markdown-mode)
-(setq markdown-command "pandoc")
+(if (eq system-type 'window-nt)
+    (setq markdown-command "pandoc")
+  (setq markdown-command "multimarkdown"))
 (prefer-coding-system 'utf-8)
 (add-hook 'markdown-mode-hook 'turn-on-orgtbl)
 
@@ -54,6 +53,11 @@
 (defun ysouyno-markdown-mode-hook ()
   (company-mode -1))
 (add-hook 'markdown-mode-hook 'ysouyno-markdown-mode-hook)
+
+;; disable flycheck-mode in emacs-lisp-mode
+(defun ysouyno-emacs-lisp-mode-hook ()
+  (flycheck-mode -1))
+(add-hook 'emacs-lisp-mode-hook 'ysouyno-emacs-lisp-mode-hook)
 
 ;;; windows-nt: FIND: Parameter format not correct
 (when (eq system-type 'windows-nt)
@@ -69,3 +73,51 @@
     (setenv "PATH" (mapconcat 'identity
                               (delete-dups path) path-separator)))
   )
+
+;;; graphviz
+(prelude-require-package 'graphviz-dot-mode)
+(use-package graphviz-dot-mode
+  :ensure t
+  :config
+  (setq graphviz-dot-indent-width 2))
+(use-package company-graphviz-dot)
+
+;;; https://www.emacswiki.org/emacs/ToggleWindowSplit
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (other-window 1)))
+          (funcall splitter)
+          (if this-win-2nd
+              (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (if this-win-2nd
+              (other-window 1))))))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

@@ -19,14 +19,14 @@
 (require 'prelude-emacs-lisp)
 ;; (require 'prelude-erlang)
 ;; (require 'prelude-elixir)
-(require 'prelude-go)
+;; (require 'prelude-go)
 ;; (require 'prelude-haskell)
 ;; (require 'prelude-js)
 ;; (require 'prelude-latex)
 (require 'prelude-lisp)
 (require 'prelude-lsp)
 ;; (require 'prelude-ocaml)
-(require 'prelude-org) ;; Org-mode helps you keep TODO lists, notes and more
+;; (require 'prelude-org) ;; Org-mode helps you keep TODO lists, notes and more
 ;; (require 'prelude-perl)
 ;; (require 'prelude-python)
 ;; (require 'prelude-ruby)
