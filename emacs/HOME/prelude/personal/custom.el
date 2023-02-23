@@ -42,16 +42,12 @@
 
 ;;; markdown, markdown-toc
 (prelude-require-package 'markdown-toc)
-(require 'markdown-mode)
-(if (eq system-type 'window-nt)
-    (setq markdown-command "pandoc")
-  (setq markdown-command "multimarkdown"))
-(prefer-coding-system 'utf-8)
 (add-hook 'markdown-mode-hook 'turn-on-orgtbl)
 
 ;; disable company-mode in markdown-mode
 (defun ysouyno-markdown-mode-hook ()
-  (company-mode -1))
+  (company-mode -1)
+  (prefer-coding-system 'utf-8))
 (add-hook 'markdown-mode-hook 'ysouyno-markdown-mode-hook)
 
 ;; disable flycheck-mode in emacs-lisp-mode
@@ -74,40 +70,9 @@
                               (delete-dups path) path-separator)))
   )
 
-;;; graphviz
-(prelude-require-package 'graphviz-dot-mode)
-(use-package graphviz-dot-mode
-  :ensure t
-  :config
-  (setq graphviz-dot-indent-width 2))
-(use-package company-graphviz-dot)
-
-;;; https://www.emacswiki.org/emacs/ToggleWindowSplit
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (other-window 1)))
-          (funcall splitter)
-          (if this-win-2nd
-              (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (if this-win-2nd
-              (other-window 1))))))
+;;; enable WIN key
+(setq w32-pass-lwindow-to-system t)
+(setq w32-pass-rwindow-to-system t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
