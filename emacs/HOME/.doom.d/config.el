@@ -91,3 +91,7 @@
 
 ;; for right click cannot open the file with Chinese name
 (set-file-name-coding-system 'gbk)
+
+;; Coding system for inter-client cut and paste
+(when (eq system-type 'windows-nt)
+  (setq selection-coding-system 'utf-16le-dos))
