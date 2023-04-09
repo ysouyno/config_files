@@ -90,7 +90,8 @@
 (map! "C-S-s" #'isearch-forward)
 
 ;; for right click cannot open the file with Chinese name
-(set-file-name-coding-system 'gbk)
+(when (eq system-type 'windows-nt)
+  (set-file-name-coding-system 'gbk))
 
 ;; Coding system for inter-client cut and paste
 (when (eq system-type 'windows-nt)
